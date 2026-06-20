@@ -1,0 +1,5 @@
+fastmcp>=2.0
+httpx>=0.27
+dnspython>=2.6
+python-whois>=0.9.4
+# x402 gating is plain Solana JSON-RPC over httpx — no x402[svm]/solders extra.
