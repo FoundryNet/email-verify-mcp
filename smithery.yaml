@@ -1,0 +1,42 @@
+name: "@foundrynet/email-verify-mcp"
+displayName: "FoundryNet Email Verification"
+description: >-
+  Email deliverability validation — MX record checking, disposable domain detection, role account identification, and batch verification.
+icon: "📧"
+homepage: "https://foundrynet.io"
+repository: "https://github.com/FoundryNet/email-verify-mcp"
+license: "MIT"
+categories:
+  - data
+  - business
+  - email
+tags:
+  - email-verification
+  - mx-validation
+  - disposable-detection
+  - deliverability
+  - email-validation
+keywords:
+  - email-verification
+  - mx-validation
+  - disposable-detection
+  - deliverability
+  - email-validation
+attestation:
+  protocol: "MINT Protocol"
+  verified_outputs: true
+  live_feed: "https://mint.foundrynet.io/feed"
+network:
+  name: "FoundryNet Data Network"
+  servers: 17
+startCommand:
+  type: http
+  url: "https://email-verify-mcp-production.up.railway.app/mcp"
+  transport: streamable-http
+  configSchema:
+    type: object
+    properties:
+      api_key:
+        type: string
+        title: "Forge billing key (optional)"
+        description: "fnet_ key to bypass the per-query x402 paywall and bill to a Forge account."
