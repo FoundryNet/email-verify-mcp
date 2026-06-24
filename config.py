@@ -17,7 +17,7 @@ Optional:
   CACHE_TTL_DAYS          domain cache freshness window, default 7
   SMTP_CHECK_ENABLED      attempt an SMTP RCPT probe (default true; most cloud
                           egress blocks port 25, so this usually returns null)
-  SMTP_CHECK_TIMEOUT      seconds, default 6
+  SMTP_CHECK_TIMEOUT      seconds, default 3 (one MX host attempt; caps probe ~3s)
   PRICE_VERIFY_EMAIL      default 0.005
   PRICE_BATCH_PER_EMAIL   default 0.003
   PRICE_BATCH_MIN         default 0.05
@@ -48,11 +48,11 @@ REQUEST_TIMEOUT = int(_env("REQUEST_TIMEOUT", "30"))
 CACHE_TTL_DAYS  = int(_env("CACHE_TTL_DAYS", "7"))
 
 SMTP_CHECK_ENABLED = _flag("SMTP_CHECK_ENABLED", True)
-SMTP_CHECK_TIMEOUT = int(_env("SMTP_CHECK_TIMEOUT", "6"))
+SMTP_CHECK_TIMEOUT = int(_env("SMTP_CHECK_TIMEOUT", "3"))
 
 # ── x402 pay-per-query gate (per-tool pricing) ───────────────────────────────
 X402_ENABLED      = _flag("X402_ENABLED", True)
-SOLANA_WALLET     = _env("SOLANA_WALLET", "wUumjWWvtFEr69qkTw3wHNVQVxLA8DTyJSyVgGmLThd")
+SOLANA_WALLET     = _env("SOLANA_WALLET", "wUumjWJjfn27VQhTXd1jUNTzszCmsErkzaEeHWbLThd")
 PAYMENT_RECIPIENT = _env("PAYMENT_RECIPIENT", SOLANA_WALLET).strip()
 PAYMENT_VERIFY_RPC = _env("PAYMENT_VERIFY_RPC", "https://api.mainnet-beta.solana.com").rstrip("/")
 PAYMENT_USDC_MINT  = _env("PAYMENT_USDC_MINT", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").strip()
@@ -64,6 +64,23 @@ PRICE_VERIFY_EMAIL    = float(_env("PRICE_VERIFY_EMAIL", "0.005"))
 PRICE_BATCH_PER_EMAIL = float(_env("PRICE_BATCH_PER_EMAIL", "0.003"))
 PRICE_BATCH_MIN       = float(_env("PRICE_BATCH_MIN", "0.05"))
 PRICE_DAILY_BRIEF     = float(_env("PRICE_DAILY_BRIEF", "5"))
+PRICE_BRIEF_SUMMARY = float(_env("PRICE_BRIEF_SUMMARY", "0.5"))  # $0.50 sample tier
+
+# ── B2B lead quality scoring (lead_quality_score / batch_lead_score) ─────────
+PRICE_LEAD_QUALITY    = float(_env("PRICE_LEAD_QUALITY", "0.01"))
+PRICE_LEAD_PER_EMAIL  = float(_env("PRICE_LEAD_PER_EMAIL", "0.01"))
+PRICE_BATCH_LEAD_MIN  = float(_env("PRICE_BATCH_LEAD_MIN", "0.05"))
+
+# brand-intel sibling REST base (free domain_age cross-enrichment, best-effort).
+BRAND_INTEL_URL = _env("BRAND_INTEL_URL",
+                       "https://brand-intel-mcp-production.up.railway.app").rstrip("/")
+
+# ── Stripe rail (parallel payment option to x402, for the daily brief) ────────
+# Agents without a USDC wallet pay this hosted Payment Link instead. The secret
+# key verifies the resulting Checkout Session; the link URL is shown on a 402.
+STRIPE_SECRET_KEY       = _env("STRIPE_SECRET_KEY", "")
+STRIPE_LINK_DAILY_BRIEF = _env("STRIPE_LINK_DAILY_BRIEF",
+                               "https://buy.stripe.com/8x29AT5rOflJgpw61x2400c")
 
 # ── Daily curated brief ──────────────────────────────────────────────────────
 BRIEF_HOUR_UTC = int(_env("BRIEF_HOUR_UTC", "5"))   # curator runs at 05:00 UTC

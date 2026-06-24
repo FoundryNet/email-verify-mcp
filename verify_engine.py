@@ -8,7 +8,8 @@ Resolves an email to deliverability signals from free primitives:
   • domain_age_days— WHOIS creation date age (best-effort; None if unknown)
   • smtp_check     — RCPT TO probe against the MX (True/False/None; most cloud
                      egress blocks port 25, so this is usually None)
-  • deliverable    — true / false / "unknown" rollup
+  • deliverable    — true / false / "mx_valid" (domain accepts mail but mailbox
+                     couldn't be SMTP-confirmed — usual cloud result) / "unknown"
 
 Everything fails open: any probe that can't complete contributes None rather than
 raising. Domain-level facts are cacheable (see core.py); email-level facts
@@ -154,7 +155,10 @@ def smtp_probe(email: str, mx_hosts: list) -> bool | None:
     egress commonly blocks port 25, so None is the typical result there."""
     if not config.SMTP_CHECK_ENABLED or not mx_hosts:
         return None
-    for host in mx_hosts[:2]:
+    # Single host attempt only: cloud egress almost always blocks port 25, so a
+    # second attempt just doubles the wall-clock for the same None. One try at the
+    # short SMTP_CHECK_TIMEOUT keeps the whole probe within ~3s.
+    for host in mx_hosts[:1]:
         try:
             server = smtplib.SMTP(timeout=config.SMTP_CHECK_TIMEOUT)
             server.connect(host, 25)
@@ -209,7 +213,12 @@ def verify(email: str, domain_row: dict) -> dict:
     elif smtp_check is False:
         deliverable = False
     else:
-        deliverable = "unknown"
+        # SMTP RCPT couldn't complete (port 25 blocked on cloud egress, or
+        # greylisting), but the domain DOES accept mail — valid MX/A records. That
+        # is a real, useful signal, so report it as such rather than a flat
+        # "unknown": the address is plausibly deliverable at the domain level,
+        # mailbox-level confirmation just wasn't possible.
+        deliverable = "mx_valid"
 
     return {
         "email": email,

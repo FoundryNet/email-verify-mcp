@@ -1,7 +1,7 @@
 name: "@foundrynet/email-verify-mcp"
-displayName: "FoundryNet Email Verification"
+displayName: "FoundryNet B2B Lead Quality Scorer"
 description: >-
-  Email deliverability validation — MX record checking, disposable domain detection, role account identification, and batch verification.
+  B2B lead quality scoring — validate email, assess domain credibility, and score leads A-F before you invest outreach time. Also provides raw email deliverability and MX verification.
 icon: "📧"
 homepage: "https://foundrynet.io"
 repository: "https://github.com/FoundryNet/email-verify-mcp"
@@ -11,17 +11,25 @@ categories:
   - business
   - email
 tags:
+  - lead-scoring
+  - sales-prospecting
+  - email-quality
+  - b2b-leads
+  - outreach-validation
   - email-verification
   - mx-validation
   - disposable-detection
   - deliverability
-  - email-validation
 keywords:
+  - lead-scoring
+  - sales-prospecting
+  - email-quality
+  - b2b-leads
+  - outreach-validation
   - email-verification
   - mx-validation
   - disposable-detection
   - deliverability
-  - email-validation
 attestation:
   protocol: "MINT Protocol"
   verified_outputs: true
