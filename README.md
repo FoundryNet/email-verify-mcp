@@ -23,4 +23,4 @@ key bypasses. Transport: Streamable HTTP at `/mcp` (+ legacy `/sse`).
 ## Live network activity
 
 **Live feed:** [mint.foundrynet.io/feed](https://mint.foundrynet.io/feed)  
-Real-time verified work across 13 servers and autonomous agents, anchored on Solana via [MINT Protocol](https://mint.foundrynet.io).
+Real-time verified work across 21 servers and autonomous agents, anchored on Solana via [MINT Protocol](https://mint.foundrynet.io).
