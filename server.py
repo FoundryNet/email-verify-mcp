@@ -186,7 +186,7 @@ _AGENT_CARD = {
                     "verified_outputs": True, "live_feed": "https://mint.foundrynet.io/feed", "feed_api": "https://mint-mcp-production.up.railway.app/v1/feed"},
     "protocols": {"mcp": {"endpoint": config.PUBLIC_MCP_URL, "transport": "streamable-http", "tools_count": 6},
                   "x402": {"supported": True, "currency": "USDC", "network": "solana"}},
-    "contact": "hello@foundrynet.io",
+    "contact": "forge@foundrynet.io",
 }
 
 

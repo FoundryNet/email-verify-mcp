@@ -24,6 +24,12 @@ def _headers(extra: Optional[dict] = None) -> dict:
     h = {"apikey": config.SUPABASE_SERVICE_KEY,
          "Authorization": f"Bearer {config.SUPABASE_SERVICE_KEY}",
          "Content-Type": "application/json", "Accept": "application/json"}
+    # Shared-hub consolidation: target this service's namespaced schema via
+    # PostgREST profile headers (Accept-Profile read / Content-Profile write).
+    _sch = getattr(config, "SUPABASE_SCHEMA", "public")
+    if _sch and _sch != "public":
+        h["Accept-Profile"] = _sch
+        h["Content-Profile"] = _sch
     if extra:
         h.update(extra)
     return h

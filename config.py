@@ -41,6 +41,10 @@ def _flag(name: str, default: bool) -> bool:
 # ── Standalone email-verify Supabase project ─────────────────────────────────
 SUPABASE_URL         = _env("SUPABASE_URL", "https://uvtycvvznncljwsylcwa.supabase.co").rstrip("/")
 SUPABASE_SERVICE_KEY = _env("SUPABASE_SERVICE_KEY")
+# Shared-hub consolidation: which Postgres schema this service's tables live in.
+# "public" = standalone; a service name (e.g. "brand") = the shared intel hub,
+# reached via PostgREST Accept-Profile/Content-Profile headers.
+SUPABASE_SCHEMA      = _env("SUPABASE_SCHEMA", "public")
 
 PORT            = int(_env("PORT", "8080"))
 REQUEST_TIMEOUT = int(_env("REQUEST_TIMEOUT", "30"))
@@ -80,7 +84,7 @@ BRAND_INTEL_URL = _env("BRAND_INTEL_URL",
 # key verifies the resulting Checkout Session; the link URL is shown on a 402.
 STRIPE_SECRET_KEY       = _env("STRIPE_SECRET_KEY", "")
 STRIPE_LINK_DAILY_BRIEF = _env("STRIPE_LINK_DAILY_BRIEF",
-                               "https://buy.stripe.com/8x29AT5rOflJgpw61x2400c")
+                               "https://foundrynet.io/pricing")
 
 # ── Daily curated brief ──────────────────────────────────────────────────────
 BRIEF_HOUR_UTC = int(_env("BRIEF_HOUR_UTC", "5"))   # curator runs at 05:00 UTC
@@ -118,3 +122,24 @@ _FNET_ALL_SERVERS = {
     "currency-intel-mcp":    "https://currency-intel-mcp-production.up.railway.app/mcp",
 }
 SISTER_SERVERS = {k: v for k, v in _FNET_ALL_SERVERS.items() if k != "email-verify-mcp"}
+
+# ── Subscriptions (network-wide $19/$49 Stripe links; same on every server) ──────
+# These lead the 402 response: a credit-card subscription converts where "send USDC
+# with an SPL-memo" does not. Both unlock unlimited queries here; Intelligence also
+# unlocks Knowledge Bases + composite products on foundrynet-agents.
+STRIPE_LINK_PRO      = _env("STRIPE_LINK_PRO",   "https://buy.stripe.com/3cIdR278Cglq7bY5b67N604")
+STRIPE_LINK_INTEL    = _env("STRIPE_LINK_INTEL", "https://buy.stripe.com/4gMaEQ78C8SYaoa32Y7N605")
+NETWORK_SERVER_COUNT = int(_env("NETWORK_SERVER_COUNT", "21"))
+
+# ── Dynamic allowlist (subscriber keys, 5-min cache; static env = fallback) ──────
+# Default: poll the agents /v1/allowlist (no DB creds needed). To read forge_api_keys
+# directly instead, set FORGE_KEYS_SUPABASE_URL + FORGE_KEYS_SUPABASE_KEY.
+FNET_ALLOWLIST_URL      = _env("FNET_ALLOWLIST_URL",
+                               "https://foundrynet-agents-production.up.railway.app/v1/allowlist")
+FORGE_KEYS_SUPABASE_URL = _env("FORGE_KEYS_SUPABASE_URL", "")
+FORGE_KEYS_SUPABASE_KEY = _env("FORGE_KEYS_SUPABASE_KEY", "")
+
+# ── Per-call event log (fire-and-forget telemetry to the agents ingest) ──────────
+EVENT_LOG_URL   = _env("EVENT_LOG_URL",
+                       "https://foundrynet-agents-production.up.railway.app/v1/call-events")
+EVENT_LOG_TOKEN = _env("EVENT_LOG_TOKEN", "")
